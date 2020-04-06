@@ -140,13 +140,13 @@ def load_data():
 
         fight_cursor_train = connection.cursor()
         fight_cursor_train.execute(
-            "SELECT CAST(fighter1_win AS decimal) /255 AS x0, CAST(fighter1_loss AS decimal) /255 AS x1, CAST(fighter2_win AS decimal) /255 AS x2, CAST(fighter2_loss AS decimal) /255 AS y, result FROM train_set LIMIT 100000")
+            "SELECT CAST(fighter1_win AS decimal) /255 AS x0, CAST(fighter1_loss AS decimal) /255 AS x1, CAST(fighter2_win AS decimal) /255 AS x2, CAST(fighter2_loss AS decimal) /255 AS y, result FROM train_set LIMIT 500000")
 
         train_set_x_orig, train_set_y_orig = processCursor(fight_cursor_train)
 
         fight_cursor_test = connection.cursor()
         fight_cursor_test.execute(
-            "SELECT CAST(fighter1_win AS decimal) /255 AS x0, CAST(fighter1_loss AS decimal) /255 AS x1, CAST(fighter2_win AS decimal) /255 AS x2, CAST(fighter2_loss AS decimal) /255 AS y, result FROM train_set LIMIT 100000 OFFSET 100000")
+            "SELECT CAST(fighter1_win AS decimal) /255 AS x0, CAST(fighter1_loss AS decimal) /255 AS x1, CAST(fighter2_win AS decimal) /255 AS x2, CAST(fighter2_loss AS decimal) /255 AS y, result FROM train_set LIMIT 100000 OFFSET 500000")
 
         test_set_x_orig, test_set_y_orig = processCursor(fight_cursor_test)
 
@@ -237,8 +237,7 @@ def linear_forward(A, W, b):
     Z -- the input of the activation function, also called pre-activation parameter
     cache -- a python dictionary containing "A", "W" and "b" ; stored for computing the backward pass efficiently
     """
-    print(type(W))
-    print(type(A))
+    
     Z = W.dot(A) + b
 
     assert(Z.shape == (W.shape[0], A.shape[1]))
@@ -327,20 +326,14 @@ def compute_cost(AL, Y):
     Returns:
     cost -- cross-entropy cost
     """
-    print(np.squeeze(Y.shape).shape)
+
     m = Y.shape[1]
 
     # Compute loss from aL and y.
     cost = (1./m) * (-np.dot(Y, np.log(AL).T) - np.dot(1-Y, np.log(1-AL).T))
 
-    print(AL.shape)
-
-    print(cost.shape)
-
     # To make sure your cost's shape is what we expect (e.g. this turns [[17]] into 17).
     cost = np.squeeze(cost)
-
-    print(cost.shape)
 
     assert(cost.shape == ())
 
